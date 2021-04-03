@@ -450,6 +450,14 @@ namespace Marten
         /// <param name="token"></param>
         /// <returns></returns>
         Task<DocumentMetadata> MetadataForAsync<T>(T entity,
-            CancellationToken token = default(CancellationToken));
+            CancellationToken token = default);
+
+        /// <summary>
+        /// Access data from another tenant and apply document or event updates to this
+        /// IDocumentSession for a separate tenant
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
+        ITenantQueryOperations ForTenant(string tenantId);
     }
 }
