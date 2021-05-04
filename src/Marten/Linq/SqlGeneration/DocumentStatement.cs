@@ -58,14 +58,12 @@ namespace Marten.Linq.SqlGeneration
                 SingleValue = SingleValue,
                 CanBeMultiples = CanBeMultiples,
                 ReturnDefaultWhenEmpty = ReturnDefaultWhenEmpty
-
             };
 
             // Select the Ids only
             SelectClause = includeIdentitySelectorStatement;
 
-            clone.Where = new InTempTableWhereFragment(includeIdentitySelectorStatement.ExportName, "id");
-            Limit = Offset = 0;
+            clone.Where = _storage.FilterDocuments(null, new InTempTableWhereFragment(includeIdentitySelectorStatement.ExportName, "id"));
 
             return clone;
         }

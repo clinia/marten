@@ -10,28 +10,26 @@ namespace Marten.Linq.Includes
 {
     public class IncludePlan<T> : IIncludePlan
     {
-        private readonly IDocumentStorage<T> _storage;
-        private readonly Action<T> _callback;
+        protected readonly IDocumentStorage<T> Storage;
+        protected readonly Action<T> Callback;
 
         public IncludePlan(IDocumentStorage<T> storage, IField connectingField, Action<T> callback)
         {
-            _storage = storage;
+            Storage = storage;
             ConnectingField = connectingField;
-            _callback = callback;
+            Callback = callback;
         }
 
         public IField ConnectingField { get; }
 
-        public int Index
+        public virtual int Index
         {
             set
             {
                 IdAlias = "id" + (value + 1);
                 ExpressionName = "include"+ (value + 1);
 
-                TempTableSelector = RequiresLateralJoin()
-                    ? $"{ExpressionName}.{IdAlias}"
-                    : $"{ConnectingField.LocatorForIncludedDocumentId} as {IdAlias}";
+                TempTableSelector = $"{ExpressionName}.id as {IdAlias}";
             }
         }
 
@@ -41,22 +39,24 @@ namespace Marten.Linq.Includes
             return ConnectingField is ArrayField;
         }
 
-        public string LeftJoinExpression => $"LEFT JOIN LATERAL {ConnectingField.LocatorForIncludedDocumentId} WITH ORDINALITY as {ExpressionName}({IdAlias}) ON TRUE";
+        public virtual string LeftJoinExpression => $"LEFT JOIN {FromObject} {ExpressionName} ON {ConnectingField.RawLocator} = {ExpressionName}.id";
 
-        public string ExpressionName { get; private set; }
+        public string ExpressionName { get; protected set; }
 
-        public string IdAlias { get; private set; }
-        public string TempTableSelector { get; private set; }
+        public string FromObject => Storage.FromObject;
+
+        public string IdAlias { get; protected set; }
+        public string TempTableSelector { get; protected set; }
 
         public Statement BuildStatement(string tempTableName)
         {
-            return new IncludedDocumentStatement(_storage, this, tempTableName);
+            return new IncludedDocumentStatement(Storage, this, tempTableName);
         }
 
         public IIncludeReader BuildReader(IMartenSession session)
         {
-            var selector = (ISelector<T>) _storage.BuildSelector(session);
-            return new IncludeReader<T>(_callback, selector);
+            var selector = (ISelector<T>) Storage.BuildSelector(session);
+            return new IncludeReader<T>(Callback, selector);
         }
 
         public class IncludedDocumentStatement : SelectorStatement
