@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Baseline;
 using Marten.Internal;
+using Marten.Linq.Filters;
+using Marten.Linq.Parsing;
 using Marten.Linq.QueryHandlers;
 using Marten.Linq.Selectors;
 using Marten.Linq.SqlGeneration;
@@ -33,6 +35,9 @@ namespace Marten.Linq.Includes
 
             Inner = original;
 
+            Offset = original.Offset;
+            Limit = original.Limit;
+
             Statement current = this;
             foreach (var include in includes)
             {
@@ -45,12 +50,11 @@ namespace Marten.Linq.Includes
             current.InsertAfter(_clonedEnd);
         }
 
-
-
         public override void CompileLocal(IMartenSession session)
         {
             Inner.CompileStructure(session);
             Inner = Inner.Top();
+            Where = Inner.Where;
         }
 
         public Type SelectedType => typeof(void);
@@ -78,14 +82,24 @@ namespace Marten.Linq.Includes
             }
             else
             {
-                sql.Append("select id, ");
+                sql.Append($"select d.id, ");
             }
 
             sql.Append(_includes.Select(x => x.TempTableSelector).Join(", "));
-            sql.Append(" from ");
-            sql.Append(FromObject);
-            sql.Append(" as d ");
-            sql.Append(_includes.Where(x => x.RequiresLateralJoin()).Select(x => x.LeftJoinExpression).Join(" "));
+            sql.Append($"\nfrom (select * from {FromObject} d ");
+            sql.Append("where ");
+            Where.Apply(sql);
+            if (Offset > 0 || Limit > 0)
+            {
+                var offsetParam = sql.AddParameter(Offset);
+                var limitParam = sql.AddParameter(Limit);
+                sql.Append(" OFFSET :");
+                sql.Append(offsetParam.ParameterName);
+                sql.Append(" LIMIT :");
+                sql.Append(limitParam.ParameterName);
+            }
+            sql.Append(") d\n");
+            sql.Append(_includes.Select(x => x.LeftJoinExpression).Join("\n"));
         }
 
         public string[] SelectFields()

@@ -268,10 +268,9 @@ namespace Marten.Linq.Parsing
             }
 
             var statement = new IncludeIdentitySelectorStatement(TopStatement, includes, _session);
+            TopStatement.Limit = TopStatement.Offset = 0;
             TopStatement = statement.Top();
             CurrentStatement = (SelectorStatement) statement.Current();
-
-
         }
 
         private IQueryHandler<TResult> buildHandlerForCurrentStatement<TResult>()

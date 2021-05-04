@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventPublisher", "EventPubl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineRunner", "CommandLineRunner\CommandLineRunner.csproj", "{B297B011-B5D1-4B3C-8503-484A93F2F073}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliniaPOC", "CliniaPOC\CliniaPOC.csproj", "{D5D37F14-6950-413B-853B-DF699344B32C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{B297B011-B5D1-4B3C-8503-484A93F2F073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B297B011-B5D1-4B3C-8503-484A93F2F073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B297B011-B5D1-4B3C-8503-484A93F2F073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5D37F14-6950-413B-853B-DF699344B32C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5D37F14-6950-413B-853B-DF699344B32C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5D37F14-6950-413B-853B-DF699344B32C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5D37F14-6950-413B-853B-DF699344B32C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

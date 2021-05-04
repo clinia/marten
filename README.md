@@ -1,4 +1,21 @@
-# Marten 
+# Marten Fork
+
+## CliniaPOC
+
+A sample project was added to test out certain use cases specific to our context.
+
+### Docker
+
+`docker-compose up` can be called at the root of the repo to quicky spin up a PLV8 enabled `postgres` container.
+
+### Console App
+
+A very simplistic console application (`CliniaPOC.csproj`) can be launched and shows basic configuration + how to create/fetch/update/delete resources.
+
+Uses cases also include the use of tenancy (`cojoined`, since `separate` does not seems to be supported system-wide), paging, compiled queries, included relationships + then-included relationships.
+
+# Marten
+
 ## .NET Transactional Document DB and Event Store on PostgreSQL
 
 [![Join the chat at https://gitter.im/JasperFx/Marten](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/JasperFx/Marten?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -20,7 +37,7 @@ Before getting started you will need the following in your environment:
 
 **1. .NET Core SDK 5.0+ and the .NET Core 3.1 Runtime**
 
-Available [here](https://dotnet.microsoft.com/download) 
+Available [here](https://dotnet.microsoft.com/download)
 
 **2. PostgreSQL 9.6 or above database with PLV8**
 
@@ -33,13 +50,13 @@ You need to enable the PLV8 extension inside of PostgreSQL for running JavaScrip
 
 Ensure the following:
 
-- The login you are using to connect to your database is a member of the `postgres` role
-- An environment variable of `marten_testing_database` is set to the connection string for the database you want to use as a testbed. (See the [Npgsql documentation](http://www.npgsql.org/doc/connection-string-parameters.html) for more information about PostgreSQL connection strings ).
+-   The login you are using to connect to your database is a member of the `postgres` role
+-   An environment variable of `marten_testing_database` is set to the connection string for the database you want to use as a testbed. (See the [Npgsql documentation](http://www.npgsql.org/doc/connection-string-parameters.html) for more information about PostgreSQL connection strings ).
 
 _Help with PSQL/PLV8_
 
-- On Windows, see [this link](http://www.postgresonline.com/journal/archives/360-PLV8-binaries-for-PostgreSQL-9.5-windows-both-32-bit-and-64-bit.html) for pre-built binaries of PLV8
-- On *nix, check [marten-local-db](https://github.com/eouw0o83hf/marten-local-db) for a Docker based PostgreSQL instance including PLV8.
+-   On Windows, see [this link](http://www.postgresonline.com/journal/archives/360-PLV8-binaries-for-PostgreSQL-9.5-windows-both-32-bit-and-64-bit.html) for pre-built binaries of PLV8
+-   On \*nix, check [marten-local-db](https://github.com/eouw0o83hf/marten-local-db) for a Docker based PostgreSQL instance including PLV8.
 
 Once you have the codebase and the connection string file, run the [build command](https://github.com/JasperFx/marten#build-commands) or use the dotnet CLI to restore and build the solution.
 
@@ -49,10 +66,10 @@ See more in [Contribution Guidelines](CONTRIBUTING.md).
 
 ### Tooling
 
-* Unit Tests rely on [xUnit](http://xunit.github.io/) and [Shouldly](https://github.com/shouldly/shouldly)
-* [Bullseye](https://github.com/adamralph/bullseye) is used for build automation.
-* [Node.js](https://nodejs.org/en/) runs our Mocha specs.
-* [Storyteller](http://storyteller.github.io) for some of the data intensive automated tests
+-   Unit Tests rely on [xUnit](http://xunit.github.io/) and [Shouldly](https://github.com/shouldly/shouldly)
+-   [Bullseye](https://github.com/adamralph/bullseye) is used for build automation.
+-   [Node.js](https://nodejs.org/en/) runs our Mocha specs.
+-   [Storyteller](http://storyteller.github.io) for some of the data intensive automated tests
 
 ### Build Commands
 
@@ -75,28 +92,28 @@ To aid in integration testing, Marten.Testing has a couple reusable base classes
 to make integration testing through Postgresql be more efficient and allow the xUnit.Net tests
 to run in parallel for better throughput.
 
-* `IntegrationContext` -- if most of the tests will use an out of the box configuration
-  (i.e., no fluent interface configuration of any document types), use this base type. Warning though,
-  this context type will **not** clean out the main `public` database schema between runs,
-  but will delete any existing data
-* `DestructiveIntegrationContext` -- similar to `IntegrationContext`, but will wipe out any and all
-  Postgresql schema objects in the `public` schema between tests. Use this sparingly please.
-* `OneOffConfigurationsContext` -- if a test suite will need to frequently re-configure
-  the `DocumentStore`, this context is appropriate. You will need to decorate any of these
-  test classes with the `[Collection]` attribute, typically using the schema name for the 
-  collection name as a convention
-* `BugIntegrationContext` -- the test harnesses for bugs tend to require custom `DocumentStore`
-  configuration, and this context is a specialization of `OneOffConfigurationsContext` for
-  the *bugs* schema. 
-* `StoreFixture` and `StoreContext` are helpful if a series of tests use the same custom
-  `DocumentStore` configuration. You'd need to write a subclass of `StoreFixture`, then use
-  `StoreContext<YourNewStoreFixture>` as the base class to share the `DocumentStore` between
-  test runs with xUnit.Net's shared context (`IClassFixture<T>`)
+-   `IntegrationContext` -- if most of the tests will use an out of the box configuration
+    (i.e., no fluent interface configuration of any document types), use this base type. Warning though,
+    this context type will **not** clean out the main `public` database schema between runs,
+    but will delete any existing data
+-   `DestructiveIntegrationContext` -- similar to `IntegrationContext`, but will wipe out any and all
+    Postgresql schema objects in the `public` schema between tests. Use this sparingly please.
+-   `OneOffConfigurationsContext` -- if a test suite will need to frequently re-configure
+    the `DocumentStore`, this context is appropriate. You will need to decorate any of these
+    test classes with the `[Collection]` attribute, typically using the schema name for the
+    collection name as a convention
+-   `BugIntegrationContext` -- the test harnesses for bugs tend to require custom `DocumentStore`
+    configuration, and this context is a specialization of `OneOffConfigurationsContext` for
+    the _bugs_ schema.
+-   `StoreFixture` and `StoreContext` are helpful if a series of tests use the same custom
+    `DocumentStore` configuration. You'd need to write a subclass of `StoreFixture`, then use
+    `StoreContext<YourNewStoreFixture>` as the base class to share the `DocumentStore` between
+    test runs with xUnit.Net's shared context (`IClassFixture<T>`)
 
 ### Mocha Specs
 
 Refer to the build commands section to look up the commands to run Mocha tests. There is also `npm run tdd` to run the mocha specifications
-in a watched mode with growl turned on. 
+in a watched mode with growl turned on.
 
 > Note: remember to run `npm install`
 

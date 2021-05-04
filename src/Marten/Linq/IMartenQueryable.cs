@@ -77,6 +77,21 @@ namespace Marten.Linq
         IMartenQueryable<T> Include<TInclude, TKey>(Expression<Func<T, object>> idSource,
             IDictionary<TKey, TInclude> dictionary) where TInclude : notnull where TKey : notnull;
 
+        IMartenQueryable<T> IncludeInverted<TInclude, TKey>(Expression<Func<TInclude, object>> idSource,
+            IDictionary<TKey, TInclude> dictionary) where TInclude : notnull where TKey : notnull;
+
+        IMartenQueryable<T> ThenInclude<TThenInclude, TInclude, TKey>(Expression<Func<TThenInclude, object>> idSource,
+            IDictionary<TKey, TInclude> dictionary)
+            where TInclude : notnull
+            where TThenInclude : notnull
+            where TKey : notnull;
+
+        IMartenQueryable<T> ThenIncludeInverted<TThenInclude, TInclude, TKey>(Expression<Func<TInclude, object>> idSource,
+            IDictionary<TKey, TInclude> dictionary)
+            where TInclude : notnull
+            where TThenInclude : notnull
+            where TKey : notnull;
+
         IMartenQueryable<T> Stats(out QueryStatistics stats);
 
         /// <summary>

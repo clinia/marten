@@ -1,4 +1,5 @@
 using Marten.Internal;
+using Marten.Linq.Fields;
 using Marten.Linq.SqlGeneration;
 
 namespace Marten.Linq.Includes
@@ -13,6 +14,9 @@ namespace Marten.Linq.Includes
         int Index { set; }
         string LeftJoinExpression { get; }
         string ExpressionName { get; }
+        string FromObject { get; }
+        IField ConnectingField { get; }
         Statement BuildStatement(string tempTableName);
+
     }
 }
