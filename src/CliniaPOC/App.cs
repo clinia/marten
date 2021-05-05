@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CliniaPOC.Extensions;
+using CliniaPOC.Infrastructure;
 using CliniaPOC.Models;
 using Marten;
 using Marten.Linq.MatchesSql;
@@ -88,8 +89,8 @@ namespace CliniaPOC
                 .Include(x => x.HealthFacilityId, healthFacilityDict)
                 .ThenIncludeInverted<HealthFacility, Practice, string>(x => x.HealthFacility, practiceDict)
                 .ThenInclude<Practice, Practitioner, string>(x => x.Practitioner, practitionerDict)
-                .Where(x => x.MatchesSql("d.data -> 'Values' ->> 'SpecialityId' = ?", SpecialityId))
-                .Take(20)
+                .Where(x => x.EqualsString(new [] {"SpecialityId"}, SpecialityId))
+                .Take(10)
                 .ToListAsync();
 
             stopwatch.Stop();
@@ -117,6 +118,24 @@ namespace CliniaPOC
 
             Log.Information(
                 $"Multiple document and 3 level include count, included health facilities, included practitioners count, included practices count, elapsed time: {healthServices.Count} - {healthFacilityDict.Count} - {practitionerDict.Count} - {practiceDict.Count} - {stopwatch.Elapsed.ToString()}");
+
+            #endregion
+
+            #region Fetch multiple documents with include mappers
+
+            stopwatch.Restart();
+
+            var healthFacilityQuery = querySession.Query<HealthFacility>();
+            var includeMapper = new HealthFacilityIncludeMapper(healthFacilityQuery);
+            var healthFacilities = await includeMapper
+                .Include(new []{"practices.practitioner", "healthServices"})
+                .Take(20)
+                .ToListAsync();
+
+            stopwatch.Stop();
+
+            Log.Information(
+                $"Multiple document with include mapper, included practices count, included practitioners count, included healthServices count, elapsed time: {healthFacilities.Count} - {includeMapper.Practices.Count} - {includeMapper.Practitioners.Count} - {includeMapper.HealthServices.Count} - {stopwatch.Elapsed.ToString()}");
 
             #endregion
 

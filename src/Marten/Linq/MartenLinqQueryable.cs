@@ -233,17 +233,17 @@ namespace Marten.Linq
             }
         }
 
-        internal IIncludePlan BuildThenInclude<TThenInclude, TInclude, TKey>(Expression<Func<TThenInclude, object>> idSource,
+        internal IIncludePlan BuildThenInclude<TSource, TInclude, TKey>(Expression<Func<TSource, object>> idSource,
             IDictionary<TKey, TInclude> dictionary)
             where TInclude : notnull
-            where TThenInclude : notnull
+            where TSource : notnull
             where TKey: notnull
         {
             var storage = (IDocumentStorage<TInclude>)_session.StorageFor(typeof(TInclude));
 
             if (storage is IDocumentStorage<TInclude, TKey> s)
             {
-                var identityField = _session.StorageFor(typeof(TThenInclude)).Fields.FieldFor(idSource);
+                var identityField = _session.StorageFor(typeof(TSource)).Fields.FieldFor(idSource);
 
                 void Callback(TInclude item)
                 {
@@ -257,10 +257,9 @@ namespace Marten.Linq
             throw new DocumentIdTypeMismatchException(storage, typeof(TKey));
         }
 
-        internal IIncludePlan BuildThenIncludeInverted<TThenInclude, TInclude, TKey>(Expression<Func<TInclude, object>> idSource,
+        internal IIncludePlan BuildThenIncludeInverted<TInclude, TKey>(Expression<Func<TInclude, object>> idSource,
             IDictionary<TKey, TInclude> dictionary)
             where TInclude : notnull
-            where TThenInclude : notnull
             where TKey: notnull
         {
             var storage = (IDocumentStorage<TInclude>)_session.StorageFor(typeof(TInclude));
@@ -296,16 +295,16 @@ namespace Marten.Linq
             return this;
         }
 
-        public IMartenQueryable<T> ThenInclude<TThenInclude, TInclude, TKey>(Expression<Func<TThenInclude, object>> idSource, IDictionary<TKey, TInclude> dictionary) where TThenInclude : notnull where TInclude : notnull where TKey : notnull
+        public IMartenQueryable<T> ThenInclude<TSource, TInclude, TKey>(Expression<Func<TSource, object>> idSource, IDictionary<TKey, TInclude> dictionary) where TSource : notnull where TInclude : notnull where TKey : notnull
         {
             var thenInclude = BuildThenInclude(idSource, dictionary);
             MartenProvider.AllIncludes.Add(thenInclude);
             return this;
         }
 
-        public IMartenQueryable<T> ThenIncludeInverted<TThenInclude, TInclude, TKey>(Expression<Func<TInclude, object>> idSource, IDictionary<TKey, TInclude> dictionary) where TThenInclude : notnull where TInclude : notnull where TKey : notnull
+        public IMartenQueryable<T> ThenIncludeInverted<TSource, TInclude, TKey>(Expression<Func<TInclude, object>> idSource, IDictionary<TKey, TInclude> dictionary) where TSource : notnull where TInclude : notnull where TKey : notnull
         {
-            var thenInclude = BuildThenIncludeInverted<TThenInclude, TInclude, TKey>(idSource, dictionary);
+            var thenInclude = BuildThenIncludeInverted<TInclude, TKey>(idSource, dictionary);
             MartenProvider.AllIncludes.Add(thenInclude);
             return this;
         }
