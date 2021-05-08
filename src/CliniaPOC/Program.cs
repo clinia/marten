@@ -55,10 +55,8 @@ namespace CliniaPOC
         {
             IServiceCollection services = new ServiceCollection();
 
-            // register the services
             services.AddSingleton(Configuration);
             services.AddOptions();
-            // services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
             services.AddMarten(opts =>
             {
@@ -77,15 +75,21 @@ namespace CliniaPOC
                 }
 
                 opts.Linq.MethodCallParsers.Add(new HealthServiceBySpecialityExtension());
+                opts.Linq.MethodCallParsers.Add(new EntityEqualsStringExtension());
 
                 opts.Policies.AllDocumentsAreMultiTenanted();
 
                 opts.Schema.For<HealthFacility>();
-                opts.Schema.For<Department>();
+
+                opts.Schema.For<Department>()
+                    .ForeignKey<HealthFacility>(x => x.HealthFacility, definition => definition.CascadeDeletes = true);
+
                 opts.Schema.For<Practice>()
                     .ForeignKey<HealthFacility>(x => x.HealthFacility, definition => definition.CascadeDeletes = true)
                     .ForeignKey<Practitioner>(x => x.Practitioner, definition => definition.CascadeDeletes = true);
+
                 opts.Schema.For<Practitioner>();
+
                 opts.Schema.For<HealthService>()
                     .ForeignKey<HealthFacility>(x => x.HealthFacilityId)
                     .ForeignKey<Practitioner>(x => x.PractitionerId)
