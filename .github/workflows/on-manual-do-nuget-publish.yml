@@ -7,6 +7,10 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   dotnet_core_version: 5.0.100
+  # GitHub Packages Feed settings
+  GITHUB_FEED: https://nuget.pkg.github.com/clinia/index.json
+  GITHUB_USER: clinia-ci
+  GITHUB_TOKEN: ${{ secrets.GHCR_TOKEN }}
 
 jobs:
   publish_job:
@@ -27,6 +31,6 @@ jobs:
 
       - name: Publish to NuGet
         run: |
-          find . -name '*.nupkg' -exec dotnet nuget push "{}" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_DEPLOY_KEY }} \;
-          # find . -name '*.snupkg' -exec dotnet nuget push "{}" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_DEPLOY_KEY }} \;
+          find . -name '*.nupkg' -exec dotnet nuget push "{}" -s $GITHUB_FEED -k ${{ secrets.GHCR_TOKEN }} \;
+          # find . -name '*.snupkg' -exec dotnet nuget push "{}" -s $GITHUB_FEED -k ${{ secrets.GHCR_TOKEN }} \;
         shell: bash

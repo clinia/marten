@@ -24,7 +24,7 @@
 
     <!--SourceLink specific settings-->
     <PropertyGroup>
-        <RepositoryUrl>https://github.com/JasperFx/marten.git</RepositoryUrl>
+        <RepositoryUrl>https://github.com/clinia/marten.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <IncludeSymbols>true</IncludeSymbols>
