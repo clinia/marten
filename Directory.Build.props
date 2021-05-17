@@ -6,6 +6,7 @@
     <Authors>Jeremy D. Miller;Babu Annamalai;Oskar Dudycz;Joona-Pekka Kokko</Authors>
     <PackageIconUrl>http://jasperfx.github.io/marten/content/images/emblem.png</PackageIconUrl>
     <PackageProjectUrl>http://jasperfx.github.io/marten</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/clinia/marten</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NoWarn>1570;1571;1572;1573;1574;1587;1591;1701;1702;1711;1735;0618</NoWarn>
   </PropertyGroup>
