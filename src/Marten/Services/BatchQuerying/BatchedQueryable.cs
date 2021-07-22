@@ -79,6 +79,24 @@ namespace Marten.Services.BatchQuerying
             return this;
         }
 
+        public IBatchedQueryable<T> IncludeInverted<TInclude, TKey>(Expression<Func<TInclude, object>> idSource, IDictionary<TKey, TInclude> dictionary) where TInclude : notnull where TKey : notnull
+        {
+            _inner = _inner.IncludeInverted(idSource, dictionary);
+            return this;
+        }
+
+        public IBatchedQueryable<T> ThenInclude<TSource, TInclude, TKey>(Expression<Func<TSource, object>> idSource, IDictionary<TKey, TInclude> dictionary) where TSource : notnull where TInclude : notnull where TKey : notnull
+        {
+            _inner = _inner.ThenInclude(idSource, dictionary);
+            return this;
+        }
+
+        public IBatchedQueryable<T> ThenIncludeInverted<TSource, TInclude, TKey>(Expression<Func<TInclude, object>> idSource, IDictionary<TKey, TInclude> dictionary) where TSource : notnull where TInclude : notnull where TKey : notnull
+        {
+            _inner = _inner.ThenIncludeInverted<TSource, TInclude, TKey>(idSource, dictionary);
+            return this;
+        }
+
         public Task<long> Count()
         {
             return _parent.Count(_inner);

@@ -78,6 +78,37 @@ namespace CliniaPOC
 
             #endregion
 
+            #region Fetch multiple documents in batch with 2 level includes
+
+            stopwatch.Restart();
+
+            practiceDict = new Dictionary<string, Practice>();
+            practitionerDict = new Dictionary<string, Practitioner>();
+            var batchedQuery = querySession.CreateBatchQuery();
+            var healthFacilitiesBatchedQueryable = batchedQuery.Query<HealthFacility>()
+                .IncludeInverted(x => x.HealthFacility, practiceDict)
+                .ThenInclude<Practice, Practitioner, string>(x => x.Practitioner, practitionerDict)
+                .SingleOrDefault(x => x.Id == "0001961a-126b-0cf3-e519-ba0dea0384d3");
+
+            var results = new List<Task<HealthFacility>>();
+            for (int i = 0; i < 100; i++)
+            {
+                results.Add(batchedQuery.Query<HealthFacility>()
+                    .IncludeInverted(x => x.HealthFacility, practiceDict)
+                    .ThenInclude<Practice, Practitioner, string>(x => x.Practitioner, practitionerDict)
+                    .SingleOrDefault(x => x.Id == "1"));
+            }
+
+            await batchedQuery.Execute();
+
+            var healthFacilitiesBatchedQueryableResult = await healthFacilitiesBatchedQueryable;
+            await Task.WhenAll(results);
+
+            Log.Information(
+                $"Multiple batch document with 2 level include count, included practitioner count, included practices count, elapsed time: {healthFacilitiesBatchedQueryableResult.Id} - {practitionerDict.Count} - {practiceDict.Count} - {stopwatch.Elapsed.ToString()}");
+
+            #endregion
+
             #region Fetch multiple documents with 3 level includes with paging
 
             stopwatch.Restart();

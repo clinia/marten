@@ -29,6 +29,21 @@ namespace Marten.Services.BatchQuerying
         IBatchedQueryable<T> Include<TInclude, TKey>(Expression<Func<T, object>> idSource,
             IDictionary<TKey, TInclude> dictionary) where TInclude : class where TKey: notnull;
 
+        IBatchedQueryable<T> IncludeInverted<TInclude, TKey>(Expression<Func<TInclude, object>> idSource,
+            IDictionary<TKey, TInclude> dictionary) where TInclude : notnull where TKey : notnull;
+
+        IBatchedQueryable<T> ThenInclude<TSource, TInclude, TKey>(Expression<Func<TSource, object>> idSource,
+            IDictionary<TKey, TInclude> dictionary)
+            where TInclude : notnull
+            where TSource : notnull
+            where TKey : notnull;
+
+        IBatchedQueryable<T> ThenIncludeInverted<TSource, TInclude, TKey>(Expression<Func<TInclude, object>> idSource,
+            IDictionary<TKey, TInclude> dictionary)
+            where TInclude : notnull
+            where TSource : notnull
+            where TKey : notnull;
+
         Task<TResult> Min<TResult>(Expression<Func<T, TResult>> expression);
 
         Task<TResult> Max<TResult>(Expression<Func<T, TResult>> expression);
