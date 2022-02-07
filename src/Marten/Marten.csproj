@@ -2,7 +2,7 @@
     <PropertyGroup>
         <PackageId>Clinia.Marten</PackageId>
         <Description>.NET Transactional Document DB and Event Store on PostgreSQL</Description>
-        <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
         <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
         <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
         <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
@@ -25,8 +25,8 @@
         <PackageReference Include="LamarCompiler" Version="3.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[2.1.0, 6.0.0]" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageReference Include="Npgsql" Version="5.0.4" />
-        <PackageReference Include="Npgsql.Json.NET" Version="5.0.4" />
+        <PackageReference Include="Npgsql" Version="[5.0.10,6.0)" />
+        <PackageReference Include="Npgsql.Json.NET" Version="[5.0.10,6.0)" />
         <PackageReference Include="Remotion.Linq" Version="2.2.0" />
         <PackageReference Include="Baseline" Version="2.1.1" />
         <PackageReference Include="System.Memory" Version="4.5.4" />
