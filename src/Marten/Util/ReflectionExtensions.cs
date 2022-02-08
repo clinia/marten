@@ -112,33 +112,6 @@ namespace Marten.Util
             return memberInfos.ToArray();
         }
 
-        public static string GetPrettyName(this Type t)
-        {
-            if (!t.GetTypeInfo().IsGenericType)
-                return t.Name;
-
-            var sb = new StringBuilder();
-
-            sb.Append(t.Name.Substring(0, t.Name.LastIndexOf("`", StringComparison.Ordinal)));
-            sb.Append(t.GetGenericArguments().Aggregate("<",
-                (aggregate, type) => aggregate + (aggregate == "<" ? "" : ",") + GetPrettyName(type)));
-            sb.Append(">");
-
-            return sb.ToString();
-        }
-
-        public static string GetTypeName(this Type type)
-        {
-            var typeName = type.Name;
-
-            if (type.GetTypeInfo().IsGenericType)
-                typeName = GetPrettyName(type);
-
-            return type.IsNested
-                ? $"{type.DeclaringType.Name}.{typeName}"
-                : typeName;
-        }
-
         public static string GetTypeFullName(this Type type)
         {
             return type.IsNested

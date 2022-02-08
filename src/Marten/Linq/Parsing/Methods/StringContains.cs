@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Baseline;
 using Baseline.Reflection;
-using Marten.Util;
 
 namespace Marten.Linq.Parsing.Methods
 {

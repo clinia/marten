@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Baseline;
+using Baseline.Reflection;
 using Marten.Util;
 
 namespace Marten.Schema
@@ -57,12 +58,18 @@ namespace Marten.Schema
 
         private static string GetTypeMartenAlias(MappedType documentType)
         {
+            var typeName = documentType.Type.Name;
+
+            if (documentType.Type.GetTypeInfo().IsGenericType)
+                typeName = documentType.Type.GetPrettyName();
             return documentType.Alias ??
-                   documentType.Type.GetTypeName()
-                       .Replace(".", "_")
-                       .SplitCamelCase()
-                       .Replace(" ", "_")
-                       .ToLowerInvariant();
+                   (documentType.Type.IsNested
+                       ? $"{documentType.Type.DeclaringType.Name}.{typeName}"
+                       : typeName)
+                   .Replace(".", "_")
+                   .SplitCamelCase()
+                   .Replace(" ", "_")
+                   .ToLowerInvariant();
         }
 
 
